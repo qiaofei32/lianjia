@@ -12,7 +12,7 @@ class MySQL_API(object):
 	"""
 	mysql api of mine
 	"""
-	def __init__(self,conf_file="DataBase.conf",connect_info={},cursorclass_name=None):
+	def __init__(self, conf_file="DataBase.conf", connect_info={}, cursorclass_name=None):
 		"""
 		init and connect to mysql
 		"""
@@ -35,23 +35,23 @@ class MySQL_API(object):
 			print "connect info error!"
 			return None
 			
-		host   = connect_info.get("host","127.0.0.1")
-		port   = connect_info.get("port",3306)
-		user   = connect_info.get("user","root")
-		passwd = connect_info.get("passwd","root")
-		db	   = connect_info.get("db","mysql")
+		host   = connect_info.get("host", "127.0.0.1")
+		port   = connect_info.get("port", 3306)
+		user   = connect_info.get("user", "root")
+		passwd = connect_info.get("passwd", "root")
+		db	   = connect_info.get("db", "mysql")
 		# cursorclass_name = connect_info.get("cursorclass","DictCursor")
 		# cursorclass_name = connect_info.get("cursorclass","Cursor") # ago
-		cursorclass_name = cursorclass_name if cursorclass_name else connect_info.get("cursorclass","Cursor") # ago
+		cursorclass_name = cursorclass_name if cursorclass_name else connect_info.get("cursorclass", "Cursor")
 		
-		cursorclass = getattr(cursors,cursorclass_name)
+		cursorclass = getattr(cursors, cursorclass_name)
 		
 		try:
-			self.conn = MySQLdb.connect(host=host,port=port,user=user,passwd=passwd,db=db,cursorclass=cursorclass) 
+			self.conn = MySQLdb.connect(host=host, port=port, user=user, passwd=passwd, db=db, cursorclass=cursorclass)
 		except Exception,e:
 			if "Unknown database" in str(e):
 				try:
-					self.conn = MySQLdb.connect(host=host,port=port,user=user,passwd=passwd,cursorclass=cursorclass) 
+					self.conn = MySQLdb.connect(host=host, port=port, user=user, passwd=passwd, cursorclass=cursorclass)
 					self.bCrateDb = True
 				except:
 					self.conn = None
@@ -89,7 +89,7 @@ class MySQL_API(object):
 			self.conn.commit()
 		return ret
 		
-	def query(self,sql,print_error=False):
+	def query(self, sql, print_error=False):
 		ret = None
 		try:
 			n = self.cursor.execute(sql) 
@@ -100,7 +100,7 @@ class MySQL_API(object):
 				ret = sql		
 		return ret
 	
-	def create_database(self,db_name):
+	def create_database(self, db_name):
 		sql = "CREATE DATABASE IF NOT EXISTS %s COLLATE='utf8_general_ci' " %db_name
 		self.query(sql)
 		self.commit()

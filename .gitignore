@@ -1,4 +1,7 @@
 baidu_geocoding.py
+*.pyc
+.idea
+backup.bat
 
 # Windows image file caches
 Thumbs.db
