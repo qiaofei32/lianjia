@@ -1,17 +1,12 @@
 ﻿import os
-import sys
 import json
 import MySQLdb
 from warnings import filterwarnings
-filterwarnings('ignore', category = MySQLdb.Warning)
-# resetwarnings()
+filterwarnings('ignore', category=MySQLdb.Warning)
 import MySQLdb.cursors as cursors
 
-
 class MySQL_API(object):
-	"""
-	mysql api of mine
-	"""
+
 	def __init__(self, conf_file="DataBase.conf", connect_info={}, cursorclass_name=None):
 		"""
 		init and connect to mysql
@@ -22,12 +17,11 @@ class MySQL_API(object):
 		conf_file_list.append("DataBase.conf")
 		conf_file_list.append("./conf/DataBase.conf")
 		conf_file_list.append("../conf/DataBase.conf")
-		conf_file_list.append("../../conf/DataBase.conf")
 		conf_file_list = list(set(conf_file_list))
 		
 		for conf_file in conf_file_list:
 			if not connect_info and os.path.exists(conf_file):
-				fileHandler = open(conf_file,"r")
+				fileHandler = open(conf_file, "r")
 				data = fileHandler.read()
 				fileHandler.close()
 				connect_info = json.loads(data)
@@ -35,15 +29,12 @@ class MySQL_API(object):
 			print "connect info error!"
 			return None
 			
-		host   = connect_info.get("host", "127.0.0.1")
-		port   = connect_info.get("port", 3306)
-		user   = connect_info.get("user", "root")
+		host = connect_info.get("host", "127.0.0.1")
+		port = connect_info.get("port", 3306)
+		user = connect_info.get("user", "root")
 		passwd = connect_info.get("passwd", "root")
-		db	   = connect_info.get("db", "mysql")
-		# cursorclass_name = connect_info.get("cursorclass","DictCursor")
-		# cursorclass_name = connect_info.get("cursorclass","Cursor") # ago
+		db = connect_info.get("db", "mysql")
 		cursorclass_name = cursorclass_name if cursorclass_name else connect_info.get("cursorclass", "Cursor")
-		
 		cursorclass = getattr(cursors, cursorclass_name)
 		
 		try:
@@ -69,15 +60,15 @@ class MySQL_API(object):
 			self.conn.select_db(db)
 	
 	def write_items(self, sql, param=None, auto_commit=True, print_error=False):
-		ret = [True,None]
+		ret = [True, None]
 		try:
 			if not param:
 				ret[1] = self.cursor.execute(sql) 
 			else:
-				if type(param)==type((1,)) or type(param)==type([1]):
+				if type(param) == type((1,)) or type(param) == type([1]):
 					# param = (("bbb",int(time.time())), ("ccc",33), ("ddd",44) )  
-					ret[1] = self.cursor.executemany(sql,param) 
-		except Exception,e:
+					ret[1] = self.cursor.executemany(sql, param)
+		except Exception as e:
 			if print_error:
 				print "=" * 60
 				print e
@@ -94,7 +85,7 @@ class MySQL_API(object):
 		try:
 			n = self.cursor.execute(sql) 
 			ret = self.cursor.fetchall()
-		except Exception,e:
+		except Exception as e:
 			if print_error:
 				print e
 				ret = sql		
@@ -110,14 +101,18 @@ class MySQL_API(object):
 		self.conn.commit()
 		
 	def close(self):
-		if self.cursor:self.cursor.close()
-		if self.conn:self.conn.close()
+		if self.cursor:
+			self.cursor.close()
+		if self.conn:
+			self.conn.close()
 		
 	def __del__(self):
-		if self.cursor:self.cursor.close()
-		if self.conn:self.conn.close()
+		if self.cursor:
+			self.cursor.close()
+		if self.conn:
+			self.conn.close()
 		
-if __name__=="__main__":
+if __name__ == "__main__":
 	
 	print "TODO"
 	# api = Write2MySQL()
