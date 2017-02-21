@@ -190,6 +190,6 @@ def crawl_comment():
 
 if __name__=="__main__":
 
-	crawl_chengjiao()
+	# crawl_chengjiao()
 	crawl_new_house()
 	crawl_comment()
